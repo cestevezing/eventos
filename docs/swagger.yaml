@@ -1,0 +1,244 @@
+definitions:
+  entity.Event:
+    properties:
+      date:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      status:
+        type: string
+      type_event_id:
+        type: integer
+    type: object
+  entity.TypeEvent:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      management_required:
+        type: boolean
+      name:
+        type: string
+    type: object
+  request.UpdateStatusRequest:
+    properties:
+      id:
+        type: integer
+      status:
+        type: string
+    type: object
+  response.GenericResponse:
+    properties:
+      code:
+        type: integer
+      data: {}
+      message:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /events:
+    get:
+      description: Lista todos los eventos almacenados
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/response.GenericResponse'
+            type: array
+      summary: Listar eventos
+      tags:
+      - Eventos
+    post:
+      consumes:
+      - application/json
+      description: Crea un nuevo evento con los datos proporcionados.
+      parameters:
+      - description: Datos del evento a crear
+        in: body
+        name: event
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Event'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Evento creado con éxito
+          schema:
+            $ref: '#/definitions/response.GenericResponse'
+      summary: Crea un nuevo evento
+      tags:
+      - Eventos
+    put:
+      consumes:
+      - application/json
+      description: Actualiza un evento existente con los datos proporcionados.
+      parameters:
+      - description: Datos del evento a actualizar, el valor de Status debe ser (Sin
+          Revisar o Revisar)
+        in: body
+        name: event
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Event'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Evento actualizado con éxito
+          schema:
+            $ref: '#/definitions/response.GenericResponse'
+      summary: Actualiza un evento existente
+      tags:
+      - Eventos
+  /events/{id}:
+    delete:
+      description: Elimina un evento existente según su ID.
+      parameters:
+      - description: ID del evento a eliminar
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Evento eliminado con éxito
+          schema:
+            $ref: '#/definitions/response.GenericResponse'
+      summary: Elimina un evento por ID
+      tags:
+      - Eventos
+  /events/get-management-required/{value}:
+    get:
+      description: Obtiene una lista de eventos filtrados por requerimiento de gestión
+        (true o false).
+      parameters:
+      - description: Valor de requerimiento de gestión (true o false)
+        in: path
+        name: value
+        required: true
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Eventos filtrados por requerimiento de gestión
+          schema:
+            items:
+              $ref: '#/definitions/response.GenericResponse'
+            type: array
+      summary: Obtiene eventos filtrados por requerimiento de gestión
+      tags:
+      - Eventos
+  /events/update-status:
+    put:
+      consumes:
+      - application/json
+      description: Actualiza el estado de un evento existente con los datos proporcionados.
+      parameters:
+      - description: Datos del estado a actualizar,  el valor de Status debe ser (Sin
+          Revisar o Revisar)
+        in: body
+        name: state
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Estado del evento actualizado con éxito
+          schema:
+            $ref: '#/definitions/response.GenericResponse'
+      summary: Actualiza el estado de un evento
+      tags:
+      - Eventos
+  /types-event:
+    get:
+      description: Obtiene una lista de tipos de eventos.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Tipos de eventos
+          schema:
+            items:
+              $ref: '#/definitions/response.GenericResponse'
+            type: array
+      summary: Obtiene tipos de eventos
+      tags:
+      - Tipos Evento
+    post:
+      consumes:
+      - application/json
+      description: Crea un nuevo tipo de evento con los datos proporcionados.
+      parameters:
+      - description: Datos del tipo de evento a crear
+        in: body
+        name: typeEvent
+        required: true
+        schema:
+          $ref: '#/definitions/entity.TypeEvent'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Tipo de evento creado con éxito
+          schema:
+            $ref: '#/definitions/response.GenericResponse'
+      summary: Crea un nuevo tipo de evento
+      tags:
+      - Tipos Evento
+    put:
+      consumes:
+      - application/json
+      description: Actualiza un tipo de evento existente con los datos proporcionados.
+      parameters:
+      - description: Datos del tipo de evento a actualizar
+        in: body
+        name: typeEvent
+        required: true
+        schema:
+          $ref: '#/definitions/entity.TypeEvent'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Tipo de evento actualizado con éxito
+          schema:
+            $ref: '#/definitions/response.GenericResponse'
+      summary: Actualiza un tipo de evento existente
+      tags:
+      - Tipos Evento
+  /types-event/{id}:
+    delete:
+      description: Elimina un tipo de evento existente según su ID.
+      parameters:
+      - description: ID del tipo de evento a eliminar
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Tipo de evento eliminado con éxito
+          schema:
+            $ref: '#/definitions/response.GenericResponse'
+      summary: Elimina un tipo de evento por ID
+      tags:
+      - Tipos Evento
+swagger: "2.0"
