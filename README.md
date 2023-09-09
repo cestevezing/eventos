@@ -19,7 +19,11 @@ Asegúrate de tener instalados los siguientes requisitos antes de ejecutar la AP
         ```
         createdb eventos
         ```
-2. Configura las credenciales de acceso a la base de datos en el archivo de configuración `.env` de la aplicación.
+2. Descarga el proyecto desde github:
+    - Clona este repositorio: `git clone https://github.com/cestevezing/eventos.git.`
+    - Navega al directorio del proyecto: `cd eventos`.
+    - Instala las dependencias: `go mod tidy`.
+3. Configura las credenciales de acceso a la base de datos en el archivo de configuración `.env` de la aplicación.
     ```
     DB_HOST=localhost
     DB_PORT=5432
@@ -27,15 +31,15 @@ Asegúrate de tener instalados los siguientes requisitos antes de ejecutar la AP
     DB_PASSWORD=mysecret
     DB_NAME=eventos
     ```
-3. Migración de la Base de Datos. Ejecuta las migraciones de Gorm para crear las tablas necesarias en la base de datos.
+4. Migración de la Base de Datos. Ejecuta las migraciones de Gorm para crear las tablas necesarias en la base de datos.
     ```
     go run cmd/migrations/main.go
     ```
-4. Carga de Datos por Defecto. Ejecuta el siguiente comando para cargar datos por defecto en la base de datos.
+5. Carga de Datos por Defecto. Ejecuta el siguiente comando para cargar datos por defecto en la base de datos.
     ```
     go run cmd/loaddata/main.go
     ```
-5. Antes de ejecutar el proyecto asegúrese de ejecutar la siguiente línea, para que pueda consultar la documentación:
+6. Antes de ejecutar el proyecto asegúrese de ejecutar la siguiente línea, para que pueda consultar la documentación:
     ```
     swag init -g cmd/events/main.go
     ```

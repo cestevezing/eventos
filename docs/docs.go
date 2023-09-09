@@ -51,7 +51,7 @@ const docTemplate = `{
                 "summary": "Actualiza un evento existente",
                 "parameters": [
                     {
-                        "description": "Datos del evento a actualizar, el valor de Status debe ser (Sin Revisar o Revisar)",
+                        "description": "Datos del evento a actualizar, el valor de Status debe ser (Sin Revisar o Revisado)",
                         "name": "event",
                         "in": "body",
                         "required": true,
@@ -88,7 +88,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entity.Event"
+                            "$ref": "#/definitions/request.EventCreate"
                         }
                     }
                 ],
@@ -104,7 +104,7 @@ const docTemplate = `{
         },
         "/events/get-management-required/{value}": {
             "get": {
-                "description": "Obtiene una lista de eventos filtrados por requerimiento de gestión (true o false).",
+                "description": "Obtiene una lista de eventos filtrados por requerimiento de gestión (true o false), solo si es evento ya esta en estado Revisado.",
                 "produces": [
                     "application/json"
                 ],
@@ -149,7 +149,7 @@ const docTemplate = `{
                 "summary": "Actualiza el estado de un evento",
                 "parameters": [
                     {
-                        "description": "Datos del estado a actualizar,  el valor de Status debe ser (Sin Revisar o Revisar)",
+                        "description": "Datos del estado a actualizar,  el valor de State debe ser (Sin Revisar o Revisado)",
                         "name": "state",
                         "in": "body",
                         "required": true,
@@ -270,7 +270,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entity.TypeEvent"
+                            "$ref": "#/definitions/request.TypeEventCreate"
                         }
                     }
                 ],
@@ -346,6 +346,40 @@ const docTemplate = `{
                 },
                 "id": {
                     "type": "integer"
+                },
+                "management_required": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "request.EventCreate": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "type_event_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "request.TypeEventCreate": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
                 },
                 "management_required": {
                     "type": "boolean"

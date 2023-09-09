@@ -19,11 +19,11 @@ func (s *TypeEventService) GetTypesEvent() ([]*entity.TypeEvent, error) {
 	return s.typeEventRepository.GetTypesEvent()
 }
 
-func (s *TypeEventService) CreateTypeEvent(typeEvent *entity.TypeEvent) (*entity.TypeEvent, error) {
+func (s *TypeEventService) CreateTypeEvent(typeEvent *entity.TypeEvent) error {
 	if err := s.typeEventRepository.CreateTypeEvent(typeEvent); err != nil {
-		return nil, err
+		return err
 	}
-	return typeEvent, nil
+	return nil
 }
 
 func (s *TypeEventService) UpdateTypeEvent(typeEvent *entity.TypeEvent) (*entity.TypeEvent, error) {

@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/cestevezing/eventos/internal/app/models/entity"
+	"github.com/cestevezing/eventos/internal/app/models/request"
 	"github.com/cestevezing/eventos/internal/app/models/response"
 	"github.com/cestevezing/eventos/internal/app/services"
 	"github.com/gin-gonic/gin"
@@ -40,22 +41,27 @@ func (eh *TypeEventHandler) GetTypesEvent(c *gin.Context) {
 // @Tags Tipos Evento
 // @Accept json
 // @Produce json
-// @Param typeEvent body entity.TypeEvent true "Datos del tipo de evento a crear"
+// @Param typeEvent body request.TypeEventCreate true "Datos del tipo de evento a crear"
 // @Success 201 {object} response.GenericResponse "Tipo de evento creado con éxito"
 // @Router /types-event [post]
 func (eh *TypeEventHandler) CreateTypeEvent(c *gin.Context) {
-	var typeEvent entity.TypeEvent
+	var typeEvent request.TypeEventCreate
 	if err := c.BindJSON(&typeEvent); err != nil {
 		c.JSON(http.StatusBadRequest, response.NewGenericResponse(http.StatusBadRequest, err.Error(), nil))
 		return
 	}
 
-	createdTypeEvent, err := eh.typeEventService.CreateTypeEvent(&typeEvent)
-	if err != nil {
+	typeEventEntity := entity.TypeEvent{
+		Name:               typeEvent.Name,
+		Description:        typeEvent.Description,
+		ManagementRequired: typeEvent.ManagementRequired,
+	}
+
+	if err := eh.typeEventService.CreateTypeEvent(&typeEventEntity); err != nil {
 		c.JSON(http.StatusInternalServerError, response.NewGenericResponse(http.StatusBadRequest, err.Error(), nil))
 		return
 	}
-	c.JSON(http.StatusCreated, response.NewGenericResponse(http.StatusCreated, "OK", createdTypeEvent))
+	c.JSON(http.StatusCreated, response.NewGenericResponse(http.StatusCreated, "OK", typeEventEntity))
 
 }
 

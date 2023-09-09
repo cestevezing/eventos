@@ -13,6 +13,6 @@ func EventRoutes(router *gin.Engine, eventHandler *handlers.EventHandler) {
 	eventRoutes.POST("/", eventHandler.CreateEvent)
 	eventRoutes.PUT("/", eventHandler.UpdateEvent)
 	eventRoutes.DELETE("/:id", eventHandler.DeleteEvent)
-	eventRoutes.PUT("/update-status", eventHandler.UpdateSatusEvent)
+	eventRoutes.PUT("/update-status", eventHandler.UpdateStatusEvent)
 	eventRoutes.GET("/get-management-required/:value", eventHandler.GetEventsByManagementRequired)
 }

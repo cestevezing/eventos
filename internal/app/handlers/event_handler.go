@@ -43,21 +43,34 @@ func (eh *EventHandler) GetEvents(c *gin.Context) {
 // @Tags Eventos
 // @Accept json
 // @Produce json
-// @Param event body entity.Event true "Datos del evento a crear"
+// @Param event body request.EventCreate true "Datos del evento a crear"
 // @Success 201 {object} response.GenericResponse "Evento creado con éxito"
 // @Router /events [post]
 func (eh *EventHandler) CreateEvent(c *gin.Context) {
-	var event entity.Event
+	var event request.EventCreate
 	if err := c.BindJSON(&event); err != nil {
 		c.JSON(http.StatusBadRequest, response.NewGenericResponse(http.StatusBadRequest, err.Error(), nil))
 		return
 	}
-	createdEvent, err := eh.eventService.CreateEvent(&event)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, response.NewGenericResponse(http.StatusInternalServerError, err.Error(), nil))
+	if event.Status == "Revisado" || event.Status == "Sin Revisar" {
+		eventEntity := entity.Event{
+			Name:        event.Name,
+			Description: event.Description,
+			TypeEventId: event.TypeEventId,
+			Date:        event.Date,
+			Status:      event.Status,
+		}
+		err := eh.eventService.CreateEvent(&eventEntity)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, response.NewGenericResponse(http.StatusInternalServerError, err.Error(), nil))
+			return
+		}
+		c.JSON(http.StatusCreated, response.NewGenericResponse(http.StatusOK, "OK", eventEntity))
+	} else {
+		c.JSON(http.StatusBadRequest, response.NewGenericResponse(http.StatusBadRequest, "El valor de State debe ser (Sin Revisar o Revisado)", nil))
 		return
 	}
-	c.JSON(http.StatusCreated, response.NewGenericResponse(http.StatusOK, "OK", createdEvent))
+
 }
 
 // @Summary Actualiza un evento existente
@@ -75,12 +88,17 @@ func (eh *EventHandler) UpdateEvent(c *gin.Context) {
 		return
 	}
 
-	updatedEvent, err := eh.eventService.UpdateEvent(&event)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, response.NewGenericResponse(http.StatusInternalServerError, err.Error(), nil))
+	if event.Status == "Revisado" || event.Status == "Sin Revisar" {
+		updatedEvent, err := eh.eventService.UpdateEvent(&event)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, response.NewGenericResponse(http.StatusInternalServerError, err.Error(), nil))
+			return
+		}
+		c.JSON(http.StatusOK, response.NewGenericResponse(http.StatusOK, "OK", updatedEvent))
+	} else {
+		c.JSON(http.StatusBadRequest, response.NewGenericResponse(http.StatusBadRequest, "El valor de Status debe ser (Sin Revisar o Revisado)", nil))
 		return
 	}
-	c.JSON(http.StatusOK, response.NewGenericResponse(http.StatusOK, "OK", updatedEvent))
 }
 
 // @Summary Elimina un evento por ID
@@ -104,21 +122,28 @@ func (eh *EventHandler) DeleteEvent(c *gin.Context) {
 // @Tags Eventos
 // @Accept json
 // @Produce json
-// @Param state body request.UpdateStatusRequest true "Datos del estado a actualizar,  el valor de Status debe ser (Sin Revisar o Revisado)"
+// @Param state body request.UpdateStatusRequest true "Datos del estado a actualizar,  el valor de State debe ser (Sin Revisar o Revisado)"
 // @Success 202 {object} response.GenericResponse "Estado del evento actualizado con éxito"
 // @Router /events/update-status [put]
-func (eh *EventHandler) UpdateSatusEvent(c *gin.Context) {
+func (eh *EventHandler) UpdateStatusEvent(c *gin.Context) {
 	var state request.UpdateStatusRequest
 	if err := c.BindJSON(&state); err != nil {
 		c.JSON(http.StatusBadRequest, response.NewGenericResponse(http.StatusBadRequest, err.Error(), nil))
 		return
 	}
 
-	if err := eh.eventService.UpdateSatusEvent(state); err != nil {
-		c.JSON(http.StatusInternalServerError, response.NewGenericResponse(http.StatusInternalServerError, err.Error(), nil))
+	if state.Status == "Revisado" || state.Status == "Sin Revisar" {
+		event, err := eh.eventService.UpdateStatusEvent(state)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, response.NewGenericResponse(http.StatusInternalServerError, err.Error(), nil))
+			return
+		}
+		c.JSON(http.StatusAccepted, response.NewGenericResponse(http.StatusAccepted, "Se actualizó con éxito", event))
+	} else {
+		c.JSON(http.StatusBadRequest, response.NewGenericResponse(http.StatusBadRequest, "El valor de status debe ser (Sin Revisar o Revisado)", nil))
 		return
 	}
-	c.JSON(http.StatusAccepted, response.NewGenericResponse(http.StatusAccepted, "Se actualizó con éxito", nil))
+
 }
 
 // @Summary Obtiene eventos filtrados por requerimiento de gestión

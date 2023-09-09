@@ -47,13 +47,14 @@ func (er *EventRepository) DeleteEvent(id string) error {
 	return er.db.Delete(&entity.Event{}, id).Error
 }
 
-func (er *EventRepository) UpdateSatusEvent(status request.UpdateStatusRequest) error {
+func (er *EventRepository) UpdateStatusEvent(status request.UpdateStatusRequest) (entity.Event, error) {
 	var resul entity.Event
 	if err := er.db.Where("id = ?", status.Id).First(&resul).Error; err != nil {
-		return errors.New("no se encuentro el evento")
+		return entity.Event{}, errors.New("no se encuentro el evento")
 	}
 	resul.Status = status.Status
-	return er.db.Save(resul).Error
+	errUpdate := er.db.Save(resul).Error
+	return resul, errUpdate
 }
 
 func (er *EventRepository) GetEventsByManagementRequired(managementRequired bool) ([]*entity.Event, error) {

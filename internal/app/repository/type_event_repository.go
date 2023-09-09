@@ -35,16 +35,16 @@ func (er *TypeEventRepository) CreateTypeEvent(typeEvent *entity.TypeEvent) erro
 	return er.db.Create(typeEvent).Error
 }
 
-func (er *TypeEventRepository) UpdateTypeEvent(event *entity.TypeEvent) error {
-	var resul entity.Event
-	if err := er.db.Where("id = ?", event.ID).First(&resul).Error; err != nil {
+func (er *TypeEventRepository) UpdateTypeEvent(typeEvent *entity.TypeEvent) error {
+	var resul entity.TypeEvent
+	if err := er.db.Where("id = ?", typeEvent.ID).First(&resul).Error; err != nil {
 		return errors.New("no se encontró el tipo de evento a editar")
 	}
-	return er.db.Save(event).Error
+	return er.db.Save(typeEvent).Error
 }
 
 func (er *TypeEventRepository) DeleteTypeEvent(id string) error {
-	var resul entity.Event
+	var resul entity.TypeEvent
 	if err := er.db.Where("id = ?", id).First(&resul).Error; err != nil {
 		return errors.New("no se encontró el tipo de evento a eliminar")
 	}

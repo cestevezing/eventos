@@ -20,11 +20,11 @@ func (s *EventService) GetEvents() ([]*entity.Event, error) {
 	return s.eventRepository.GetEvents()
 }
 
-func (s *EventService) CreateEvent(event *entity.Event) (*entity.Event, error) {
+func (s *EventService) CreateEvent(event *entity.Event) error {
 	if err := s.eventRepository.CreateEvent(event); err != nil {
-		return nil, err
+		return err
 	}
-	return event, nil
+	return nil
 }
 
 func (s *EventService) UpdateEvent(event *entity.Event) (*entity.Event, error) {
@@ -41,11 +41,12 @@ func (s *EventService) DeleteEvent(id string) error {
 	return nil
 }
 
-func (s *EventService) UpdateSatusEvent(status request.UpdateStatusRequest) error {
-	if err := s.eventRepository.UpdateSatusEvent(status); err != nil {
-		return err
+func (s *EventService) UpdateStatusEvent(status request.UpdateStatusRequest) (entity.Event, error) {
+	event, err := s.eventRepository.UpdateStatusEvent(status)
+	if err != nil {
+		return entity.Event{}, err
 	}
-	return nil
+	return event, nil
 }
 
 func (s *EventService) GetEventsByManagementRequired(managementRequired bool) ([]*entity.Event, error) {

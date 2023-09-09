@@ -25,6 +25,28 @@ definitions:
       name:
         type: string
     type: object
+  request.EventCreate:
+    properties:
+      date:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+      status:
+        type: string
+      type_event_id:
+        type: integer
+    type: object
+  request.TypeEventCreate:
+    properties:
+      description:
+        type: string
+      management_required:
+        type: boolean
+      name:
+        type: string
+    type: object
   request.UpdateStatusRequest:
     properties:
       id:
@@ -68,7 +90,7 @@ paths:
         name: event
         required: true
         schema:
-          $ref: '#/definitions/entity.Event'
+          $ref: '#/definitions/request.EventCreate'
       produces:
       - application/json
       responses:
@@ -85,7 +107,7 @@ paths:
       description: Actualiza un evento existente con los datos proporcionados.
       parameters:
       - description: Datos del evento a actualizar, el valor de Status debe ser (Sin
-          Revisar o Revisar)
+          Revisar o Revisado)
         in: body
         name: event
         required: true
@@ -123,7 +145,7 @@ paths:
   /events/get-management-required/{value}:
     get:
       description: Obtiene una lista de eventos filtrados por requerimiento de gestión
-        (true o false).
+        (true o false), solo si es evento ya esta en estado Revisado.
       parameters:
       - description: Valor de requerimiento de gestión (true o false)
         in: path
@@ -148,8 +170,8 @@ paths:
       - application/json
       description: Actualiza el estado de un evento existente con los datos proporcionados.
       parameters:
-      - description: Datos del estado a actualizar,  el valor de Status debe ser (Sin
-          Revisar o Revisar)
+      - description: Datos del estado a actualizar,  el valor de State debe ser (Sin
+          Revisar o Revisado)
         in: body
         name: state
         required: true
@@ -190,7 +212,7 @@ paths:
         name: typeEvent
         required: true
         schema:
-          $ref: '#/definitions/entity.TypeEvent'
+          $ref: '#/definitions/request.TypeEventCreate'
       produces:
       - application/json
       responses:

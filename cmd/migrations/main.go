@@ -20,4 +20,5 @@ func init() {
 
 func main() {
 	database.DB.AutoMigrate(&entity.TypeEvent{}, &entity.Event{})
+	log.Println("Successful!")
 }
